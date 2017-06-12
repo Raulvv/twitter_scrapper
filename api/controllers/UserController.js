@@ -1,7 +1,7 @@
 module.exports = {
 	index: (req, res) => {
 		User.find({}).exec( (err, users) =>{
-			return res.send('Hello World');
+			return res.send(users);
 		})
 	},
 
