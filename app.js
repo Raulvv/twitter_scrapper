@@ -1,6 +1,6 @@
 process.chdir(__dirname);
 
-const sails;
+const sails = "";
 
 try {
   sails = require('sails');
