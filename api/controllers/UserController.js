@@ -1,17 +1,38 @@
 module.exports = {
 	index: (req, res) => {
 		User.find({}).exec( (err, users) =>{
-			return res.send(users);
+			if (err) {res.send(err)}
+			if (users.length === 0){return res.status(200).json({message: 'There are no users'});}
+			else {return res.json(users)};
 		})
 	},
 
 	show: (req, res) => {
-		TwitterScrapperService.scrapUser(req.params.username).then( (value) => {
-			User.create(value).exec( (err, user) => {
-				if (err) { return res.serverError(err); }
+		let username = req.params.username;
 
-				return res.json(user);
-			});
+		TwitterScrapperService.scrapUser(username).then( (value) => {
+			if (value === "Wrong username") {
+				res.status(404);
+				res.json({message: 'The twitter username does not exist'});
+				return;
+			}
+			let criteria = {username: username};
+
+			User.findOne(criteria).then( (result) => {
+	      if(result){
+	        User.update(criteria, value, (err, user) => {
+	  				if (err) { return res.serverError(err); }
+
+	  				return res.json(user[0]);
+	  			});
+	      }else{
+	        User.create(value, (err, user) => {
+	  				if (err) { return res.serverError(err); }
+
+	  				return res.json(user);
+	  			});
+	      }
+	    });
 		});
 	}
 };

@@ -1,12 +1,23 @@
 const request  = require('supertest');
-const scrapper = require('../../api/services/TwitterScrapperService.service')
+const should   = require('should');
 
 describe('TwitterScrapperService', function() {
 
   describe('#scrapUser()', function() {
-    it('should send hello world', function (done) {
-      scrapper.scrapUser('RaulvvH')
+
+    // it('should save whithout errors if twitter username exist', (done) => {
+    //   TwitterScrapperService.scrapUser('RaulvvH').then( (err, value) => {
+    //     done();
+    //   })
+    // });
+
+    it('should return an error if Twitter username does not exist', (done) => {
+      TwitterScrapperService.scrapUser('RaulvvH').then( (err, value) => {
+        should(err === "Wrong username");
+        done();
+      })
     });
+
   });
 
 });

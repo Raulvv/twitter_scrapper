@@ -18,12 +18,15 @@ module.exports = {
       }
 
       return user;
+    }).catch( (reason) => {
+      return "Wrong username";
     })
   },
 
   scrapStats: (username) => {
     return new Promise( (resolve, reject) => {
       xray(`https://twitter.com/${username}`, '.ProfileNav-list')( (err, stats) => {
+        if (err) {reject(err)}
         let data = stats.match(/((\d+(\.\d*)?)|(\.\d+))/g);
         resolve(data);
       });
@@ -33,6 +36,7 @@ module.exports = {
   scrapBio: (username) => {
     return new Promise( (resolve, reject) => {
       xray(`https://twitter.com/${username}`, '.ProfileHeaderCard-bio')( (err, bio) => {
+        if (err) {reject(err)}
         resolve(bio);
       })
     })
